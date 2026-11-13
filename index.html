@@ -1,0 +1,38 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Guides</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--fg:#1b2430;--muted:#5d6b7a;--line:#d5dce3;--accent:#1f5f8b}
+@media (prefers-color-scheme:dark){:root{--bg:#12161b;--card:#1b222b;--fg:#e6ebf0;--muted:#9aa7b4;--line:#2d3844;--accent:#6bb0dd}}
+*{box-sizing:border-box}
+body{margin:0;padding:24px 16px;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto}
+h1{margin:0 0 4px;font-size:1.6rem}
+p{margin:0 0 20px;color:var(--muted)}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+a{display:block;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--accent);font-weight:600;text-decoration:none;text-transform:uppercase;letter-spacing:.02em}
+a:hover,a:focus-visible{border-color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<h1>Study Guides</h1>
+<p>Each folder containing an index.html is listed automatically.</p>
+<ul>
+{%- assign guides = site.static_files | where: "name", "index.html" | sort: "path" -%}
+{%- for f in guides -%}
+{%- if f.path != "/index.html" -%}
+{%- assign dir = f.path | remove: "/index.html" | remove_first: "/" -%}
+<li><a href="{{ site.baseurl }}{{ f.path | remove: 'index.html' }}">{{ dir | replace: "-", " " }}</a></li>
+{%- endif -%}
+{%- endfor -%}
+</ul>
+</main>
+</body>
+</html>
