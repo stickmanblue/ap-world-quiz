@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AP World Notebook 14–17 Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one centered study card, controls above, choices stacked below */
+:root{--bg:#f3f5f7;--card:#fff;--fg:#1b2430;--muted:#5d6b7a;--line:#d5dce3;--accent:#1f5f8b;--good:#2e7d4f;--bad:#b23a3a;
+--display:"Fraunces",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121820;--card:#1b232d;--fg:#e6ebf0;--muted:#98a6b4;--line:#2e3a47;--accent:#6fb0dc;--good:#5cc28a;--bad:#e57373;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121820;--card:#1b232d;--fg:#e6ebf0;--muted:#98a6b4;--line:#2e3a47;--accent:#6fb0dc;--good:#5cc28a;--bad:#e57373;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+main{max-width:640px;margin:0 auto;display:grid;gap:16px}
+h1{font:600 1.6rem/1.2 var(--display);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--fg);padding:6px 12px;font:inherit;font-size:.9rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.score{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+.card{background:var(--card);border:2px dashed var(--line);border-radius:6px;padding:28px 20px;min-height:140px;display:grid;place-items:center;text-align:center}
+.label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.prompt{font:600 1.3rem/1.35 var(--display)}
+.prompt.long{font:400 1.1rem/1.5 var(--body)}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:inherit;cursor:pointer}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:focus-visible,.seg button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.choice.right{border-color:var(--good);box-shadow:inset 4px 0 0 var(--good)}
+.choice.wrong{border-color:var(--bad);box-shadow:inset 4px 0 0 var(--bad)}
+.choice:disabled{cursor:default}
+.foot{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.btn{background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:10px 18px;font:600 1rem var(--body);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+.fb{font-weight:600}.fb.ok{color:var(--good)}.fb.no{color:var(--bad)}
+.done ul{padding-left:18px;margin:8px 0 0}.done li{margin-bottom:6px}
+</style>
+
+<main>
+  <header>
+    <h1>AP World Notebook 14–17 Quiz</h1>
+    <p class="sub">24 terms from the Period 2 list covered in Notebooks 14–17.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Quiz direction">
+      <button id="m-term" aria-pressed="true">Term → Definition</button>
+      <button id="m-def" aria-pressed="false">Definition → Term</button>
+    </div>
+    <span class="score" id="score"></span>
+  </div>
+  <section id="quiz">
+    <div class="card"><div><div class="label" id="plabel"></div><div class="prompt" id="prompt"></div></div></div>
+    <div class="choices" id="choices" style="margin-top:12px"></div>
+    <div class="foot" style="margin-top:12px">
+      <span class="fb" id="fb" aria-live="polite"></span>
+      <button class="btn" id="next" hidden>Next</button>
+    </div>
+  </section>
+  <section id="done" class="done card" hidden style="text-align:left;place-items:start"></section>
+</main>
+
+<script>
+const TERMS=[
+["Westerlies","Winds that blow from west to east"],
+["Trade winds","Prevailing winds that blow northeast from 30 degrees north latitude to the equator and that blow southeast from 30 degrees south latitude to the equator"],
+["Charter Company","An association formed by investors or shareholders for the purpose of trade, exploration, and colonization"],
+["Mercantilism","An economic policy under which nations sought to increase their wealth and power by obtaining large amounts of gold and silver and by selling more goods than they bought"],
+["Caravel","A small, highly maneuverable three-masted ship used by the Portuguese and Spanish in the exploration of the Atlantic."],
+["Atlantic System","The network of trading links after 1500 that moved goods, wealth, people, and cultures around the Atlantic Ocean basin."],
+["Middle Passage","A voyage that brought enslaved Africans across the Atlantic Ocean to North America and the West Indies"],
+["Vasco de Gama","This Portuguese explorer was the first European sailor to sail around Africa in 1498 and make it to India"],
+["Christopher Columbus","He mistakenly discovered the Americas in 1492 while searching for a faster route to India."],
+["Prince Henry the Navigator","(1394-1460) Prince of Portugal who established an observatory and school of navigation at Sagres and directed voyages that spurred the growth of Portugal's colonial empire."],
+["Portolan maps","Maps with lines radiating from compasses that showed routes to important ports"],
+["Encomienda System","It gave settlers the right to tax local Native Americans or to make them work. In exchange, these settlers were supposed to protect the Native American people and convert them to Christianity"],
+["Spanish Caste System","System based on race that was used for social control and also determined a person's role and importance in society. Peninsular, Creole, Mestizo, Indios"],
+["Columbian Exchange","The exchange of plants, animals, diseases, and technologies between the Americas and the rest of the world following Columbus's voyages."],
+["Indentured Servants","Colonists who received free passage to North America in exchange for working without pay for a certain number of years"],
+["Tokugawa Shogunate","A semi-feudal government of Japan in which one of the shoguns unified the country under his family's rule. They moved the capital to Edo, which now is called Tokyo."],
+["Shimabara Rebellion","Peasant uprising, protest against taxes but also religious persecution, defeated, led to end of Christianity in Japan before the 19th century, contact with foreigners restricted"],
+["Sakoku","During the Tokugawa shogunate in Japan, the policy of closing the country to foreign trade with Europe and encouraging domestic production of goods that had previously been imported."],
+["Renaissance","\"Rebirth\"; following the Middle Ages, a movement that centered on the revival of interest in the classical learning of Greece and Rome"],
+["Scientific Revolution","A major change in European thought, starting in the mid-1500s, in which the study of the natural world began to be characterized by careful observation and the questioning of accepted beliefs."],
+["Shakespeare","English poet and dramatist considered one of the greatest English writers (1564-1616)"],
+["Cervantes","Spanish writer best remembered for 'Don Quixote' which satirizes chivalry and influenced the development of the novel form (1547-1616)"],
+["Copernicus","Devised a model of the universe with the Sun at the center, and not earth."],
+["Galileo Galilei","Italian astronomer and mathematician who was the first to use a telescope to study the stars"]];
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let mode="term",deck,pos,right,missed,answered;
+function start(list){deck=shuffle(list||TERMS.map((_,i)=>i));pos=0;right=0;missed=[];$("done").hidden=true;$("quiz").hidden=false;show()}
+function show(){
+  answered=false;const i=deck[pos],[t,d]=TERMS[i],askTerm=mode==="term";
+  $("plabel").textContent=askTerm?"Term":"Definition";
+  $("prompt").textContent=askTerm?t:d;$("prompt").className="prompt"+(askTerm?"":" long");
+  $("score").textContent=`Question ${pos+1} of ${deck.length} · ${right} correct`;
+  $("fb").textContent="";$("next").hidden=true;
+  const opts=shuffle([i,...shuffle(TERMS.map((_,k)=>k).filter(k=>k!==i)).slice(0,3)]);
+  const box=$("choices");box.innerHTML="";
+  opts.forEach((k,n)=>{const b=document.createElement("button");b.className="choice";b.id="c"+n;
+    b.textContent=askTerm?TERMS[k][1]:TERMS[k][0];b.onclick=()=>pick(b,k===i,i,opts);box.appendChild(b)});
+}
+function pick(b,ok,i,opts){
+  if(answered)return;answered=true;
+  [...$("choices").children].forEach((c,n)=>{c.disabled=true;if(opts[n]===i)c.classList.add("right")});
+  if(ok){right++;$("fb").textContent="Correct";$("fb").className="fb ok"}
+  else{b.classList.add("wrong");missed.push(i);$("fb").textContent="Not quite. The correct answer is marked.";$("fb").className="fb no"}
+  $("score").textContent=`Question ${pos+1} of ${deck.length} · ${right} correct`;
+  $("next").hidden=false;$("next").textContent=pos+1<deck.length?"Next":"See results";$("next").focus();
+}
+$("next").onclick=()=>{pos++;pos<deck.length?show():finish()};
+function finish(){
+  $("quiz").hidden=true;const el=$("done");el.hidden=false;
+  const pct=Math.round(right/deck.length*100);
+  el.innerHTML=`<div style="width:100%"><div class="label">Results</div><div class="prompt">${right} of ${deck.length} correct (${pct}%)</div>`+
+   (missed.length?`<p class="sub" style="margin-top:12px">Terms to review:</p><ul>${missed.map(i=>`<li><strong>${TERMS[i][0]}</strong>: ${TERMS[i][1]}</li>`).join("")}</ul>`:`<p class="sub">You got every term right.</p>`)+
+   `<div class="foot" style="margin-top:16px">${missed.length?'<button class="btn" id="retry">Retry missed terms</button>':''}<button class="btn ghost" id="again">Start over with all 24</button></div></div>`;
+  const m=missed.slice();
+  if($("retry"))$("retry").onclick=()=>start(m);
+  $("again").onclick=()=>start();
+}
+function setMode(m){mode=m;$("m-term").setAttribute("aria-pressed",m==="term");$("m-def").setAttribute("aria-pressed",m==="def");start()}
+$("m-term").onclick=()=>setMode("term");$("m-def").onclick=()=>setMode("def");
+start();
+</script>
+
+</html>
